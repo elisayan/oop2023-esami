@@ -1,6 +1,7 @@
 package a02a.e2;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class LogicsImpl implements Logics {
 
@@ -46,17 +47,19 @@ public class LogicsImpl implements Logics {
     public boolean isOver() {
         if (clicked.size() >= 4) {
             List<Pair<Integer, Integer>> lastFour = clicked.subList(clicked.size() - 4, clicked.size());
-            Set<Integer> xSet = new HashSet<>();
-            Set<Integer> ySet = new HashSet<>();
+            List<Integer> xSet = new LinkedList<>();
+            List<Integer> ySet = new LinkedList<>();
 
             for (Pair<Integer, Integer> pair : lastFour) {
                 xSet.add(pair.getX());
                 ySet.add(pair.getY());
-                System.out.println("xSet: " + xSet);
-                System.out.println("ySet: " + ySet);
             }
 
-            return xSet.equals(ySet);
+            xSet = xSet.stream().distinct().sorted().collect(Collectors.toList());
+            ySet = ySet.stream().distinct().sorted().collect(Collectors.toList());
+
+            return (xSet.size() == 2 && ySet.size() == 2) && xSet.get(0).equals(xSet.get(xSet.size() - 1) - 2)
+                    && ySet.get(0).equals(ySet.get(ySet.size() - 1) - 2);
         }
 
         return false;
