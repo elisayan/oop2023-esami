@@ -5,11 +5,12 @@ import java.util.*;
 public class LogicsImpl implements Logics{
 
     private final int size;
-    private List<Pair<Integer, Integer>> asterisch = new LinkedList<>();
+    private Set<Pair<Integer, Integer>> asterisch = new HashSet<>();
     private List<Pair<Integer, Integer>> selected = new LinkedList<>();
 
     public LogicsImpl(int size) {
         this.size = size;
+        setAsterisch();
     }
 
     private void setAsterisch(){
@@ -28,7 +29,6 @@ public class LogicsImpl implements Logics{
 
     @Override
     public boolean isAsterisch(int x, int y) {
-        setAsterisch();
         return asterisch.contains(new Pair<>(x,y));
     }
 
@@ -46,18 +46,13 @@ public class LogicsImpl implements Logics{
     public boolean isOver() {
         if (selected.size()>=4) {
             List<Pair<Integer, Integer>> lastFour = selected.subList(selected.size()-4, selected.size());
-            List<Integer> xList = new LinkedList<>();
-            List<Integer> yList = new LinkedList<>();
-            for (Pair<Integer,Integer> pair : lastFour) {
-                xList.add(pair.getX());
-                yList.add(pair.getY());
-            }
 
-            xList= xList.stream().distinct().sorted().toList();
-            yList = yList.stream().distinct().sorted().toList();
+            List<Integer> xList = lastFour.stream().map(Pair::getX).distinct().sorted().toList();
+            List<Integer> yList = lastFour.stream().map(Pair::getY).distinct().sorted().toList();
 
-            return (xList.size() == 2 && yList.size() == 2) && (xList.get(0).equals(xList.get(xList.size() - 1) - 2))
-                    && (yList.get(0).equals(yList.get(yList.size() - 1) - 2));
+            return xList.size() == 2 && yList.size() == 2 &&
+                    xList.get(0).equals(xList.get(xList.size() - 1) - 2) &&
+                    yList.get(0).equals(yList.get(yList.size() - 1) - 2);
         }
         return false;
     }
