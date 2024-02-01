@@ -1,10 +1,11 @@
 package a02b.e2;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LogicsImpl implements Logics {
-    private List<Pair<Integer, Integer>> square = new LinkedList<>();
-    private List<Pair<Integer, Integer>> direction = new LinkedList<>();
+    private List<Pair<Integer, Integer>> square = new ArrayList<>();
+    private List<Pair<Integer, Integer>> direction = new ArrayList<>();
     private Pair<Integer, Integer> end;
     private boolean over = false;
 
@@ -20,8 +21,8 @@ public class LogicsImpl implements Logics {
             return false;
         }
 
-        if (direction.contains(new Pair<>(x,y))) {
-            moveSquare(x,y);
+        if (direction.contains(new Pair<>(x, y))) {
+            moveSquare(x, y);
             return true;
         }
 
@@ -29,39 +30,31 @@ public class LogicsImpl implements Logics {
     }
 
     private void setSquare(int x, int y) {
-        end = new Pair<Integer, Integer>(x, y);
+        end = new Pair<>(x, y);
         for (int i = x - 2; i <= x + 2; i++) {
             for (int j = y - 2; j <= y + 2; j++) {
-                if (!((i == x - 1 && j == y - 1) || (i == x + 1 && j == y + 1) || (i == x - 1 && j == y + 1)
-                        || (i == x + 1 && j == y - 1))) {
-                    square.add(new Pair<Integer, Integer>(i, j));
+                Pair<Integer, Integer> cell = new Pair<>(i, j);
+                if (!isCorner(cell)) {
+                    square.add(cell);
                 } else {
-                    direction.add(new Pair<Integer, Integer>(i, j));
+                    direction.add(cell);
                 }
             }
         }
     }
 
     private void moveSquare(int x, int y) {
-        if (x == end.getX() - 1 && y == end.getY() - 1) {
-            square.clear();
-            setSquare(x - 2, y - 2);
-        }
+        int dx = x - end.getX();
+        int dy = y - end.getY();
 
-        if (x == end.getX() + 1 && y == end.getY() + 1) {
-            square.clear();
-            setSquare(x + 2, y + 2);
-        }
+        square.clear();
+        setSquare(end.getX() + 2 * dx, end.getY() + 2 * dy);
+    }
 
-        if (x == end.getX() - 1 && y == end.getY() + 1) {
-            square.clear();
-            setSquare(x - 2, y + 2);
-        }
-
-        if (x == end.getX() + 1 && y == end.getY() - 1) {
-            square.clear();
-            setSquare(x + 2, y - 2);
-        }
+    private boolean isCorner(Pair<Integer, Integer> cell) {
+        int dx = Math.abs(cell.getX() - end.getX());
+        int dy = Math.abs(cell.getY() - end.getY());
+        return (dx == 1 && dy == 1);
     }
 
     @Override
