@@ -20,12 +20,16 @@ public class LogicsImpl implements Logics {
             return true;
         }
 
-        if (!square.isEmpty() && x == 0 || y == 0 || x == size - 1 || y == size - 1) {
+        if (isOnBorder(x, y)) {
             moveSquare(x, y);
             return true;
         }
 
         return false;
+    }
+
+    private boolean isOnBorder(int x, int y){
+        return x == 0 || y == 0 || x == size - 1 || y == size - 1;
     }
 
     private void setSquare(int x, int y) {
@@ -38,30 +42,16 @@ public class LogicsImpl implements Logics {
 
     private void moveSquare(int x, int y) {
         square.clear();
-        if (x == 0) {
-            heart = new Pair<Integer, Integer>(heart.getX() - 1, heart.getY());
-            setSquare(heart.getX(), heart.getY());
-        }
 
-        if (y == 0) {
-            heart = new Pair<Integer, Integer>(heart.getX(), heart.getY() - 1);
-            setSquare(heart.getX(), heart.getY());
-        }
+        heart = new Pair<Integer, Integer>(heart.getX() + (x == 0 ? -1 : (x == size - 1 ? 1 : 0)),
+                heart.getY() + (y == 0 ? -1 : (y == size - 1 ? 1 : 0)));
 
-        if (x == size - 1) {
-            heart = new Pair<Integer, Integer>(heart.getX() + 1, heart.getY());
-            setSquare(heart.getX(), heart.getY());
-        }
-
-        if (y == size - 1) {
-            heart = new Pair<Integer, Integer>(heart.getX(), heart.getY() + 1);
-            setSquare(heart.getX(), heart.getY());
-        }
+        setSquare(heart.getX(), heart.getY());
     }
 
     @Override
     public boolean isOver() {
-        return square.stream().anyMatch(e -> e.getX() == -1 || e.getX() == size || e.getY() == -1 || e.getY() == size);
+        return square.stream().anyMatch(e -> e.getX() < 0 || e.getX() >= size || e.getY() < 0 || e.getY() >= size);
     }
 
     @Override
