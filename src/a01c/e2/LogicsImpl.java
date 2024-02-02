@@ -16,21 +16,20 @@ public class LogicsImpl implements Logics {
 
     @Override
     public NumberClick hit(int x, int y) {
-        Pair<Integer, Integer> pair = new Pair<Integer, Integer>(x, y);
+        Pair<Integer, Integer> pair = new Pair<>(x, y);
         selected.add(pair);
+
         switch (selected.size()) {
             case 1:
-                myFirst = selected.get(0);
+                myFirst = pair;
                 return NumberClick.FIRST;
             case 2:
-
-                mySecond = selected.get(1);
+                mySecond = pair;
                 return NumberClick.SECOND;
             case 3:
-                square = setSquare(selected.get(0), selected.get(1));
+                square = setSquare(myFirst, mySecond);
                 return NumberClick.THIRD;
             default:
-
                 square = expandSquare();
                 return NumberClick.OTHER;
         }
@@ -41,31 +40,28 @@ public class LogicsImpl implements Logics {
 
         for (int i = Math.min(first.getX(), second.getX()); i <= Math.max(first.getX(), second.getX()); i++) {
             for (int j = Math.min(first.getY(), second.getY()); j <= Math.max(first.getY(), second.getY()); j++) {
-                mySquare.add(new Pair<Integer, Integer>(i, j));
+                mySquare.add(new Pair<>(i, j));
             }
         }
 
-        mySquare.removeAll(selected);
+        mySquare.remove(selected.get(0));
+        mySquare.remove(selected.get(1));
         return mySquare;
     }
 
     private Set<Pair<Integer, Integer>> expandSquare() {
-        Set<Pair<Integer, Integer>> expandSet = new HashSet<>();
-        myFirst = new Pair<Integer, Integer>(myFirst.getX() - 1, myFirst.getY() - 1);
-        mySecond = new Pair<Integer, Integer>(mySecond.getX() + 1, mySecond.getY() + 1);
-        expandSet = setSquare(myFirst, mySecond);
-
-        return expandSet;
+        myFirst = new Pair<>(myFirst.getX() - 1, myFirst.getY() - 1);
+        mySecond = new Pair<>(mySecond.getX() + 1, mySecond.getY() + 1);
+        return setSquare(myFirst, mySecond);
     }
 
     @Override
     public boolean isOver() {
-        return selected.size() + square.size() >= size * size;
+        return square.size() >= size * size;
     }
 
     @Override
     public boolean isSquare(int x, int y) {
         return square.contains(new Pair<>(x, y));
     }
-
 }
