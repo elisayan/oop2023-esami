@@ -34,26 +34,30 @@ public class LogicsImpl implements Logics {
             start = new Pair<Integer, Integer>(start.getX() - 1, start.getY() - 1);
             end = new Pair<Integer, Integer>(end.getX() + 1, end.getY() + 1);
         }
-        setRectangle(start, end);
+        setRectangle();
 
         return null;
     }
 
-    private void setRectangle(Pair<Integer, Integer> start, Pair<Integer, Integer> end) {
+    private void setRectangle() {
         rectangle.clear();
         for (int i = Math.min(start.getX(), end.getX()); i <= Math.max(start.getX(), end.getX()); i++) {
             for (int j = Math.min(start.getY(), end.getY()); j <= Math.max(start.getY(), end.getY()); j++) {
-                if (!((i == selected.get(0).getX() && j == selected.get(0).getY())
-                        || (i == selected.get(1).getX() && j == selected.get(1).getY()))) {
+                if (!isSelectedCell(i, j)) {
                     rectangle.add(new Pair<Integer, Integer>(i, j));
                 }
             }
         }
     }
 
+    private boolean isSelectedCell(int i, int j){
+        List<Pair<Integer, Integer>> fistSecond = selected.subList(0, 2);        
+        return fistSecond.stream().anyMatch(e->e.getX()==i && e.getY()==j);
+    }
+
     @Override
     public boolean isOver() {
-        return rectangle.size() > size * size;
+        return rectangle.size() >= size * size;
     }
 
     @Override
