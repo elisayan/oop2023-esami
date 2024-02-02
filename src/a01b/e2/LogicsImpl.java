@@ -13,36 +13,29 @@ public class LogicsImpl implements Logics {
     }
 
     @Override
-    public String hit(int x, int y) {
+    public Optional<String> hit(int x, int y) {
         Pair<Integer, Integer> pair = new Pair<Integer, Integer>(x, y);
 
         if (selected.size() < 5 && !selected.contains(pair)) {
             selected.add(pair);
-            return String.valueOf(selected.size());
+            return Optional.of(String.valueOf(selected.size()));
         }
 
         if (selected.contains(pair)) {
-            return String.valueOf(selected.indexOf(pair) + 1);
+            return Optional.of(String.valueOf(selected.indexOf(pair) + 1));
         }
 
         if (selected.size() == 5) {
             moveSelected();
         }
-        return null;
+        return Optional.empty();
     }
 
     private void moveSelected() {
-        List<Pair<Integer, Integer>> mySelected = new LinkedList<>();
-
-        if (selected.stream().anyMatch(e -> e.getX() == 0)) {
+        if (!changeDirection && selected.stream().anyMatch(e -> e.getX() == 0)) {
             changeDirection = true;
         }
-
-        for (Pair<Integer, Integer> pair : selected) {
-            mySelected.add(new Pair<Integer, Integer>(pair.getX() + (changeDirection ? 1 : -1), pair.getY()));
-        }
-
-        selected = mySelected;
+        selected.replaceAll(pair -> new Pair<Integer, Integer>(pair.getX() + (changeDirection ? 1 : -1), pair.getY()));
     }
 
     @Override
@@ -51,14 +44,10 @@ public class LogicsImpl implements Logics {
     }
 
     @Override
-    public String getMark(int x, int y) {
+    public Optional<Integer> getMark(int x, int y) {
         Pair<Integer, Integer> pair = new Pair<Integer, Integer>(x, y);
 
-        if (selected.contains(pair)) {
-            return String.valueOf(selected.indexOf(pair) + 1);
-        }
-
-        return null;
+        return Optional.of(this.selected.indexOf(pair)).filter(i -> i >= 0).map(i -> i + 1);
     }
 
 }

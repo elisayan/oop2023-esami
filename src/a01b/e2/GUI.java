@@ -24,10 +24,10 @@ public class GUI extends JFrame {
             var jb = (JButton)e.getSource();
         	var position = cells.get(jb);
 
-            jb.setText(logics.hit(position.getX(), position.getY()));
-            
+            //jb.setText();
+            logics.hit(position.getX(), position.getY());
             for (var entry : cells.entrySet()) {
-                entry.getKey().setText(logics.getMark(entry.getValue().getX(), entry.getValue().getY()));
+                entry.getKey().setText(logics.getMark(entry.getValue().getX(), entry.getValue().getY()).map(String::valueOf).orElse(""));
             }
             
             if (logics.isOver()) {

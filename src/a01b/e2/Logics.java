@@ -1,7 +1,9 @@
 package a01b.e2;
 
+import java.util.*;
+
 public interface Logics {
-    String hit (int x, int y);
+    Optional<String> hit (int x, int y);
     boolean isOver();
-    String getMark(int x, int y);
+    Optional<Integer> getMark(int x, int y);
 }
