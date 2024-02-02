@@ -5,7 +5,6 @@ import java.util.*;
 public class LogicsImpl implements Logics{
     private final int size;
     private List<Pair<Integer,Integer>> selected = new LinkedList<>();
-    private boolean moving = false;
 
     public LogicsImpl(int size) {
         this.size = size;
@@ -16,12 +15,6 @@ public class LogicsImpl implements Logics{
         Pair<Integer,Integer> pair= new Pair<Integer,Integer>(x, y);
 
         if (isAdjacent(x, y)) {
-            moving=true;
-            move();
-            return Optional.empty();
-        }
-
-        if (moving) {
             move();
             return Optional.empty();
         }
